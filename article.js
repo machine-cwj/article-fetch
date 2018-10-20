@@ -2,7 +2,7 @@ const request = require('request')
 const fs = require('fs')
 const url = require('url')
 
-export default class Article {
+module.exports = class Article {
   constructor (url, options) {
     Object.defineProperties(this, {
       url: { get: () => url },

@@ -19,7 +19,7 @@ const zhuang_huan = [
 const _replace = text => {
   let tmp = text
   zhuang_huan.forEach(item => {
-    tmp = tmp.replace(item.regx, i.text)
+    tmp = tmp.replace(item.regx, item.text)
   })
   return tmp
 }
