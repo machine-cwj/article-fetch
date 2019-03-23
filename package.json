@@ -5,7 +5,8 @@
   "author": "chenwenjian1996@qq.com",
   "license": "MIT",
   "scripts": {
-    "dev": "node index.js"
+    "dev": "node index.js",
+    "test": "node test.js"
   },
   "dependencies": {
     "request": "^2.88.0"

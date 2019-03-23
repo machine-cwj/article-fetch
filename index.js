@@ -5,6 +5,7 @@ const article_url = 'https://www.biquge.info/40_40289/'
 
 // 纵横小说
 // const options = require('./zongheng')
+// 笔趣阁
 const options = require('./biquge')
 
 // 创建一个抓取进程
