@@ -3,13 +3,6 @@ const fs = require('fs')
 const _url = require('url')
 
 module.exports = class Article {
-  constructor (url) {
-    Object.defineProperties(this, {
-      url: { get: () => url },
-      urlObj: { get: () => _url.parse(url) }
-    })
-  }
-
   get (url) {
     return new Promise((resolve, reject) => {
       request(url, { rejectUnauthorized: false }, (error, response) => {
@@ -62,7 +55,11 @@ module.exports = class Article {
   /**
    * 开始抓取
    */
-  process () {
+  process (url) {
+    Object.defineProperties(this, {
+      url: { get: () => url },
+      urlObj: { get: () => _url.parse(url) }
+    })
     return this.parseArticle().then(() => this.readyStream()).then(() => {
       return this.parseChapter()
     })
