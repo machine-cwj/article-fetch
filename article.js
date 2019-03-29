@@ -1,31 +1,40 @@
 const request = require('request')
 const fs = require('fs')
-const url = require('url')
+const _url = require('url')
 
 module.exports = class Article {
-  constructor (url, options) {
+  constructor (url) {
     Object.defineProperties(this, {
       url: { get: () => url },
-      options: { get: () => options }
+      urlObj: { get: () => _url.parse(url) }
     })
   }
 
   get (url) {
     return new Promise((resolve, reject) => {
-      request(url, (error, {statusCode, statusMessage, body}) => {
+      request(url, { rejectUnauthorized: false }, (error, response) => {
         if (error) reject(error)
-        else resolve({ code: statusCode, data: body, msg: statusMessage })
+        else {
+          const { statusCode, statusMessage, body } = response
+          resolve({ code: statusCode, data: body, msg: statusMessage })
+        }
       })
     })
+  }
+
+  // 将对应的网址注册到对象中
+  registry (host, option) {
+    this.options = this.options || {}
+    this.options[host] = option
   }
 
   /**
    * 解析目录网页，提取小说标题和目录列表
    */
   parseArticle () {
-    return this.get(this.url).then(({data}) => {
-      this.title = this.options.title(data)
-      this.chapterList = this.options.chapterList(data)
+    return this.get(this.url).then(({ data }) => {
+      this.title = this.options[this.urlObj.host].title(data)
+      this.chapterList = this.options[this.urlObj.host].chapterList(data)
     })
   }
 
@@ -34,10 +43,10 @@ module.exports = class Article {
    */
   async parseChapter () {
     for (let tmp of this.chapterList) {
-      let {data} = await this.get(url.resolve(this.url, tmp))
+      let { data } = await this.get(_url.resolve(this.url, tmp))
       this.storage({
-        title: this.options.chapterTitle(data),
-        content: this.options.chapterContent(data)
+        title: this.options[this.urlObj.host].chapterTitle(data),
+        content: this.options[this.urlObj.host].chapterContent(data)
       })
     }
   }
