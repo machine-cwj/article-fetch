@@ -24,11 +24,10 @@ module.exports = class Article {
   /**
    * 解析目录网页，提取小说标题和目录列表
    */
-  parseArticle () {
-    return this.get(this.url).then(({ data }) => {
-      this.title = this.options[this.urlObj.host].title(data)
-      this.chapterList = this.options[this.urlObj.host].chapterList(data)
-    })
+  async parseArticle () {
+    let { data } = await this.get(this.url)
+    this.title = this.option.title(data)
+    this.chapterList = this.option.chapterList(data)
   }
 
   /**
@@ -38,8 +37,8 @@ module.exports = class Article {
     for (let tmp of this.chapterList) {
       let { data } = await this.get(_url.resolve(this.url, tmp))
       this.storage({
-        title: this.options[this.urlObj.host].chapterTitle(data),
-        content: this.options[this.urlObj.host].chapterContent(data)
+        title: this.option.chapterTitle(data),
+        content: this.option.chapterContent(data)
       })
     }
   }
@@ -55,14 +54,14 @@ module.exports = class Article {
   /**
    * 开始抓取
    */
-  process (url) {
-    Object.defineProperties(this, {
-      url: { get: () => url },
-      urlObj: { get: () => _url.parse(url) }
-    })
-    return this.parseArticle().then(() => this.readyStream()).then(() => {
-      return this.parseChapter()
-    })
+  async process (url) {
+    this.url = url
+    this.option = this.options[_url.parse(url).host]
+    if (!this.option)
+      throw Error('The host does not match the option.')
+    await this.parseArticle()
+    await this.readyStream()
+    await this.parseChapter()
   }
 
   /**
