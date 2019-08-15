@@ -48,7 +48,7 @@ module.exports = class Article {
    * @param {*} chapter 章节内容，含title和content属性
    */
   storage (chapter) {
-    this.stream.write(`${chapter.title}\n${chapter.content}\n`)
+    this.stream.write(`${chapter.title}\n\n${chapter.content}\n\n`)
   }
 
   /**

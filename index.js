@@ -10,7 +10,7 @@ _process.registry('www.xbiquge6.com', require('./libs/xbiquge6'))
 
 // 开始抓取
 console.log('Start')
-_process.process('https://www.xbiquge6.com/0_875/').catch(e => {
+_process.process('https://www.xbiquge6.com/63_63326/').catch(e => {
   console.error(e)
 }).then(() => {
   _process.close()
