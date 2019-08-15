@@ -16,5 +16,5 @@ yarn install
 #### 运行脚本，开始抓取
 执行命令
 ```shell
-node index
+npm run start
 ```
